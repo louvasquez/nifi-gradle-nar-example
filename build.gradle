@@ -1,13 +1,16 @@
 allprojects  {
   group = 'org.apache.nifi'
-  version = '1.5.0-SNAPSHOT'
+  version = '1.23.2'
+  ext {
+    nar_version = version+'.'+'5'
+  }
 }
 
 subprojects {
-  apply plugin: 'java'
+  //apply plugin: 'java'
   apply plugin: 'groovy'
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  sourceCompatibility = 1.11
+  targetCompatibility = 1.11
   tasks.withType(GroovyCompile) {
   	options.encoding = 'UTF-8'
   }

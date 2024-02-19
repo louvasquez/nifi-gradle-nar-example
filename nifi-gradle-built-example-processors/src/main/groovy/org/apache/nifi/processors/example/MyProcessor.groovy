@@ -35,12 +35,12 @@ import org.apache.nifi.processor.util.StandardValidators
 
 
 @Tags(["example"])
-@CapabilityDescription("Provide a description")
+@CapabilityDescription("Basic my properties v4 j8")
 @SeeAlso([])
 @ReadsAttributes([@ReadsAttribute(attribute = "", description = "")])
 @WritesAttributes([@WritesAttribute(attribute = "", description = "")])
 class MyProcessor extends AbstractProcessor {
-
+    
     public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor.Builder()
             .name("MY_PROPERTY")
             .displayName("My property")
@@ -88,6 +88,7 @@ class MyProcessor extends AbstractProcessor {
         if (!flowFile) {
             return
         }
+        session.transfer(flowFile,MY_RELATIONSHIP)
         // TODO implement
     }
 }

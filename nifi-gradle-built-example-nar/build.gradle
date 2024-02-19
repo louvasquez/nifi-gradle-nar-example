@@ -1,6 +1,3 @@
-plugins {
-    id 'org.ajoberstar.grgit' version '2.1.0'
-}
 
 description = 'An example project on how to use Gradle to build NiFi ARchive projects (NARs)'
 
@@ -14,20 +11,22 @@ jar {
     dependsOn ':nifi-gradle-built-example-processors:jar'
     jar.extension = 'nar'
 
+    println "running jar"
     into('META-INF/bundled-dependencies') {
         from project(':nifi-gradle-built-example-processors').configurations.compile
         from project(':nifi-gradle-built-example-processors').tasks['jar'].archivePath
     }
 
+    //println "branch:" + getWorkingBranch() + " rev:" + getWorkingRevision() + " tag:" + getWorkingTag()
     manifest {
         def defaultAttrs = [
-                'Build-Revision'                     : getWorkingRevision() ?: 'unknown',
-                'Build-Branch'                       : getWorkingBranch() ?: 'unknown',
-                'Build-Tag'                          : getWorkingTag(),
+                'Build-Revision'                     : gitRev() ?: 'unknown',
+                'Build-Branch'                       : gitBranch() ?: 'unknown',
+                'Build-Tag'                          : gitTag(),
                 'Build-Timestamp'                    : new Date().format(BUILD_TIMESTAMP_FORMAT),
                 'Built-By'                           : System.properties['user.name'] ?: 'unknown',
                 'Nar-Id'                             : project.name,
-                'Nar-Version'                        : project.version,
+                'Nar-Version'                        : project.ext.nar_version,
                 'Clone-During-Instance-Class-Loading': false,
                 'Created-By'                         : "Gradle ${gradle.gradleVersion}",
                 'Build-Jdk'                          : "Groovy ${GroovySystem.version}"
@@ -43,14 +42,29 @@ jar {
     }
 }
 
-def getWorkingBranch() {
-    grgit.branch.getCurrent().name
+def gitBranch() {
+    def byteOut = new ByteArrayOutputStream()
+    project.exec {
+        commandLine = "git rev-parse --abbrev-ref HEAD".split(" ")
+        standardOutput = byteOut
+    }
+    return new String(byteOut.toByteArray()).trim()
+}
+def gitRev() {
+    def byteOut = new ByteArrayOutputStream()
+    project.exec {
+        commandLine = "git rev-parse --short HEAD".split(" ")
+        standardOutput = byteOut
+    }
+    return new String(byteOut.toByteArray()).trim()
 }
 
-def getWorkingRevision() {
-    grgit.head().id
+def gitTag() {
+    def byteOut = new ByteArrayOutputStream()
+    project.exec {
+        commandLine = "git describe --tags --abbrev=0".split(" ")
+        standardOutput = byteOut
+    }
+    return new String(byteOut.toByteArray()).trim()
 }
 
-def getWorkingTag() {
-    grgit.tag.list()[0] ?: 'HEAD'
-}
