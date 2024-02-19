@@ -35,7 +35,7 @@ import org.apache.nifi.processor.util.StandardValidators
 
 
 @Tags(["example"])
-@CapabilityDescription("Basic my properties v4 j8")
+@CapabilityDescription("Basic my properties j11")
 @SeeAlso([])
 @ReadsAttributes([@ReadsAttribute(attribute = "", description = "")])
 @WritesAttributes([@WritesAttribute(attribute = "", description = "")])

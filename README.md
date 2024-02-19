@@ -1,2 +1,4 @@
 # nifi-gradle-nar-example
-A test project to set up a full Groovy/Gradle based project for an example NAR for Apache NiFi
+*Thanks to fork from mattyb149*
+
+Simpler example (than plugin) to build working processor nar for nifi 1.23.2 (java 11).
